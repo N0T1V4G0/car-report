@@ -5,6 +5,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
@@ -24,5 +25,10 @@ export class UsersController {
     const user = await this.userService.findByID(parseInt(id));
     if (!user) throw new NotFoundException('User not found');
     return user;
+  }
+
+  @Get()
+  async findUsersByEmail(@Query('email') email: string) {
+    return this.userService.findByEmail(email);
   }
 }

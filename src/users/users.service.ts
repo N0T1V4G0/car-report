@@ -11,4 +11,10 @@ export class UsersService {
     const user = this.repo.create({ email, password });
     return this.repo.save(user);
   }
+
+  async findByID(id: number) {
+    return this.repo.findOne({
+      where: { id },
+    });
+  }
 }

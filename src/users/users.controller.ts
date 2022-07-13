@@ -8,10 +8,13 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateUserDTO } from './dtos/create-user.dto';
+import { UserDTO } from './dtos/user.dto';
 import { UsersService } from './users.service';
 
 @Controller('auth')
+@Serialize(UserDTO)
 export class UsersController {
   constructor(private userService: UsersService) {}
 

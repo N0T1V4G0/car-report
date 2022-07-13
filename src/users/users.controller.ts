@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -30,5 +31,10 @@ export class UsersController {
   @Get()
   async findUsersByEmail(@Query('email') email: string) {
     return this.userService.findByEmail(email);
+  }
+
+  @Delete('/:id')
+  async deleteUser(@Param('id') id: string) {
+    return this.userService.delete(parseInt(id));
   }
 }

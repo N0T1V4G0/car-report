@@ -1,13 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateUserDTO } from './dtos/create-user.dto';
 import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-  async create(email: string, password: string) {
+  async create({ email, password }: CreateUserDTO) {
     const user = this.repo.create({ email, password });
     return this.repo.save(user);
   }
@@ -18,7 +19,7 @@ export class UsersService {
     });
   }
 
-  async findByEmail(email: string) {
+  async listByEmail(email: string) {
     return this.repo.find({
       where: { email },
     });

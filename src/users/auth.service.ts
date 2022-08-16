@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
@@ -17,5 +21,15 @@ export class AuthService {
     const hash = (await scrypt(password, salt, 32)) as Buffer;
     const result = salt + '.' + hash.toString('hex');
     return this.userService.create({ email, password: result });
+  }
+
+  async signin({ email, password }: CreateUserDTO) {
+    const [user] = await this.userService.listByEmail(email);
+    if (!user) throw new BadRequestException('User or password incorrect');
+    const [salt, storedHash] = user.password.split('.');
+    const hash = (await scrypt(password, salt, 32)) as Buffer;
+    if (storedHash !== hash.toString('hex'))
+      throw new BadRequestException('User or password incorrect');
+    return user;
   }
 }
